@@ -170,26 +170,98 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CustomController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\客戶聯絡人Controller.cs" />
+    <Compile Include="Controllers\客戶資料Controller.cs" />
+    <Compile Include="Controllers\客戶銀行資訊Controller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CustomData.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomData.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomData.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomData.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomView.cs">
+      <DependentUpon>CustomData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomView.Partial.cs">
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EFGeneratePartialClass.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\客戶聯絡人.cs">
+      <DependentUpon>CustomData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\客戶聯絡人.Partial.cs">
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\客戶資料.cs">
+      <DependentUpon>CustomData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\客戶資料.Partial.cs">
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\客戶銀行資訊.cs">
+      <DependentUpon>CustomData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\客戶銀行資訊.Partial.cs">
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\驗證手機格式Attribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\客戶資料.mdf" />
+    <Content Include="App_Data\客戶資料_log.ldf" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\CustomData.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CustomData.edmx</DependentUpon>
+      <LastGenOutput>CustomData.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\CustomData.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CustomData.edmx</DependentUpon>
+      <LastGenOutput>CustomData.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\EFGeneratePartialClass.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EFGeneratePartialClass.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\CustomData.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CustomData.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\CustomData.edmx.diagram">
+      <DependentUpon>CustomData.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -236,6 +308,30 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Custom\Create.cshtml" />
+    <Content Include="Views\Custom\Delete.cshtml" />
+    <Content Include="Views\Custom\Details.cshtml" />
+    <Content Include="Views\Custom\Edit.cshtml" />
+    <Content Include="Views\Custom\Index.cshtml" />
+    <Content Include="Views\Custom\ReadCustomView.cshtml" />
+    <Content Include="Views\Custom\客戶資料管理.cshtml" />
+    <Content Include="Views\Custom\客戶聯絡人管理.cshtml" />
+    <Content Include="Views\Custom\客戶銀行帳戶管理.cshtml" />
+    <Content Include="Views\客戶銀行資訊\客戶銀行資訊Create.cshtml" />
+    <Content Include="Views\客戶銀行資訊\客戶銀行資訊Index.cshtml" />
+    <Content Include="Views\客戶資料\客戶資料Index.cshtml" />
+    <Content Include="Views\客戶資料\客戶資料Create.cshtml" />
+    <Content Include="Views\客戶聯絡人\客戶聯絡人Index.cshtml" />
+    <Content Include="Views\客戶聯絡人\客戶聯絡人Create.cshtml" />
+    <Content Include="Views\客戶聯絡人\客戶聯絡人Edit.cshtml" />
+    <Content Include="Views\客戶銀行資訊\客戶銀行資訊Details.cshtml" />
+    <Content Include="Views\客戶銀行資訊\客戶銀行資訊Edit.cshtml" />
+    <Content Include="Views\客戶資料\客戶資料Details.cshtml" />
+    <Content Include="Views\客戶資料\客戶資料Edit.cshtml" />
+    <Content Include="Views\客戶聯絡人\客戶聯絡人Details.cshtml" />
+    <Content Include="Views\客戶資料\客戶資料Delete.cshtml" />
+    <Content Include="Views\客戶聯絡人\客戶聯絡人Delete.cshtml" />
+    <Content Include="Views\客戶銀行資訊\客戶銀行資訊Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -248,9 +344,7 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
