@@ -25,6 +25,7 @@ namespace MVC5Homework.Controllers
                 user.手機.Contains(keyword) || 
                 user.電話.Contains(keyword) || 
                 user.職稱.Contains(keyword)));
+            ViewBag.客戶名稱 = new SelectList(db.客戶資料, "Id", "客戶名稱");
             return View(客戶聯絡人.ToList());
         }
 

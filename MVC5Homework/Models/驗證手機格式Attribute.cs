@@ -12,6 +12,8 @@ namespace MVC5Homework.Models
         }
         public override bool IsValid(object data)
         {
+            if (data == null) { return true; }
+
             string str = (string)data;
             Regex regex = new Regex("\\d{4}-\\d{6}");
 

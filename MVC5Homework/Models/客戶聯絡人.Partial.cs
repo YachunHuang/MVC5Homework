@@ -11,7 +11,9 @@ namespace MVC5Homework.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             客戶資料Entities1 db = new 客戶資料Entities1();
-            var result = db.客戶聯絡人.Where(u => u.客戶Id == this.客戶Id && u.Email == this.Email && (u.是否刪除 == false));
+            var result = db.客戶聯絡人.Where(u => u.客戶Id == this.客戶Id && u.Email == this.Email 
+            && (u.是否刪除 == false || u.是否刪除 == null)
+            && u.Id != this.Id);
             if (result.Count() > 0)
             {
                 yield return new ValidationResult("同一個客戶下的聯絡人，其 Email 不能重複。",
