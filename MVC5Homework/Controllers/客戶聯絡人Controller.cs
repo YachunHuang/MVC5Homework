@@ -15,7 +15,7 @@ namespace MVC5Homework.Controllers
         private 客戶資料Entities1 db = new 客戶資料Entities1();
 
         // GET: 客戶聯絡人
-        public ActionResult 客戶聯絡人Index(string keyword="")
+        public ActionResult 客戶聯絡人Index(string keyword = "")
         {
             var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料)
                 .Where(user => (user.是否刪除 == false || user.是否刪除 == null) 
@@ -24,7 +24,8 @@ namespace MVC5Homework.Controllers
                 user.Email.Contains(keyword) || 
                 user.手機.Contains(keyword) || 
                 user.電話.Contains(keyword) || 
-                user.職稱.Contains(keyword)));
+                user.職稱.Contains(keyword) ||
+                user.客戶資料.客戶名稱.Contains(keyword)));
             ViewBag.客戶名稱 = new SelectList(db.客戶資料, "Id", "客戶名稱");
             return View(客戶聯絡人.ToList());
         }

@@ -23,7 +23,8 @@ namespace MVC5Homework.Controllers
             客.帳戶名稱.Contains(keyword) ||
             客.銀行名稱.Contains(keyword) ||
             客.帳戶號碼.Contains(keyword)  ||
-            客.帳戶名稱.Contains(keyword)));
+            客.帳戶名稱.Contains(keyword) ||
+            客.客戶資料.客戶名稱.Contains(keyword)));
             return View(客戶銀行資訊.ToList());
         }
 
