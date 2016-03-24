@@ -26,7 +26,7 @@ namespace MVC5Homework.Controllers
                 user.電話.Contains(keyword) || 
                 user.職稱.Contains(keyword) ||
                 user.客戶資料.客戶名稱.Contains(keyword)));
-            ViewBag.客戶名稱 = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶名稱 = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
             return View(客戶聯絡人.ToList());
         }
 
@@ -48,7 +48,7 @@ namespace MVC5Homework.Controllers
         // GET: 客戶聯絡人/Create
         public ActionResult 客戶聯絡人Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
             return View();
         }
 
@@ -61,12 +61,13 @@ namespace MVC5Homework.Controllers
         {
             if (ModelState.IsValid)
             {
+                客戶聯絡人.是否刪除 = false;
                 db.客戶聯絡人.Add(客戶聯絡人);
                 db.SaveChanges();
                 return RedirectToAction("客戶聯絡人Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -82,7 +83,7 @@ namespace MVC5Homework.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -95,11 +96,12 @@ namespace MVC5Homework.Controllers
         {
             if (ModelState.IsValid)
             {
+                客戶聯絡人.是否刪除 = false;
                 db.Entry(客戶聯絡人).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("客戶聯絡人Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
