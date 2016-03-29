@@ -63,17 +63,21 @@ namespace MVC5Homework.Controllers
         [HttpPost]
         public ActionResult 客戶聯絡人Partial(IList<BatchUpdateCust> data)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && data != null)
             {
+                var custId = 0;
                 foreach (var item in data)
                 {
                     var prod = db.客戶聯絡人.Find(item.Id);
+                    custId = prod.客戶資料.Id;
                     prod.職稱 = item.職稱;
                     prod.手機 = item.手機;
                     prod.電話 = item.電話;
                 }
                 db.SaveChanges();
-                return RedirectToAction("客戶資料Details");
+
+                var 客戶聯絡人 = db.客戶聯絡人.Where(u => u.是否刪除 == false && u.客戶Id == custId);
+                return View(客戶聯絡人.ToList());
             }
 
             return View();
