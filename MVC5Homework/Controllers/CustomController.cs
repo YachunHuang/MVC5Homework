@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVC5Homework.Models;
+using System.IO;
 
 namespace MVC5Homework.Controllers
 {
@@ -18,101 +19,6 @@ namespace MVC5Homework.Controllers
         public ActionResult Index()
         {
             return View(db.客戶資料.ToList());
-        }
-
-        // GET: Custom/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            if (客戶資料 == null)
-            {
-                return HttpNotFound();
-            }
-            return View(客戶資料);
-        }
-
-        // GET: Custom/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Custom/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
-        {
-            if (ModelState.IsValid)
-            {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(客戶資料);
-        }
-
-        // GET: Custom/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            if (客戶資料 == null)
-            {
-                return HttpNotFound();
-            }
-            return View(客戶資料);
-        }
-
-        // POST: Custom/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(客戶資料);
-        }
-
-        // GET: Custom/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            if (客戶資料 == null)
-            {
-                return HttpNotFound();
-            }
-            return View(客戶資料);
-        }
-
-        // POST: Custom/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
@@ -130,22 +36,31 @@ namespace MVC5Homework.Controllers
             return View(data);
         }
 
-        public ActionResult 客戶資料管理()
+        public FileResult ExportData()
         {
-            var data = db.客戶資料.AsQueryable();
-            return View(data);
-        }
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
 
-        public ActionResult 客戶聯絡人管理()
-        {
-            var data = db.客戶聯絡人.AsQueryable();
-            return View(data);
-        }
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("客戶名稱");
+            row1.CreateCell(1).SetCellValue("聯絡人數量");
+            row1.CreateCell(2).SetCellValue("銀行帳戶數量");
 
-        public ActionResult 客戶銀行帳戶管理()
-        {
-            var data = db.客戶銀行資訊.AsQueryable();
-            return View(data);
+            var i = 0;
+            foreach(var item in db.CustomView.AsEnumerable())
+            {
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                rowtemp.CreateCell(0).SetCellValue(item.客戶名稱);
+                rowtemp.CreateCell(1).SetCellValue(item.聯絡人數量.ToString());
+                rowtemp.CreateCell(2).SetCellValue(item.銀行帳戶數量.ToString());
+
+                i++;
+            }
+
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "ReadCustomView.xls");
         }
     }
 }
