@@ -11,14 +11,12 @@ using System.IO;
 
 namespace MVC5Homework.Controllers
 {
-    public class 客戶聯絡人Controller : Controller
+    public class 客戶聯絡人Controller : BaseController
     {
-        private 客戶資料Entities1 db = new 客戶資料Entities1();
-        客戶聯絡人Repository repo = RepositoryHelper.Get客戶聯絡人Repository();
         // GET: 客戶聯絡人
         public ActionResult 客戶聯絡人Index(string keyword = "")
         {
-            var 客戶聯絡人 = repo.All().Include(客 => 客.客戶資料)
+            var 客戶聯絡人 = contractRepo.All().Include(客 => 客.客戶資料)
                 .Where(user => (user.是否刪除 == false || user.是否刪除 == null)
                 && (keyword == "" || keyword == null || user.姓名.Contains(keyword)));
             ViewBag.客戶名稱 = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
@@ -32,7 +30,7 @@ namespace MVC5Homework.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = repo.Find(id.Value);
+            客戶聯絡人 客戶聯絡人 = contractRepo.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -43,7 +41,7 @@ namespace MVC5Homework.Controllers
         // GET: 客戶聯絡人/Create
         public ActionResult 客戶聯絡人Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -57,12 +55,12 @@ namespace MVC5Homework.Controllers
             if (ModelState.IsValid)
             {
                 客戶聯絡人.是否刪除 = false;
-                repo.Add(客戶聯絡人);
-                repo.UnitOfWork.Commit();
+                contractRepo.Add(客戶聯絡人);
+                contractRepo.UnitOfWork.Commit();
                 return RedirectToAction("客戶聯絡人Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -73,12 +71,12 @@ namespace MVC5Homework.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = repo.Find(id.Value);
+            客戶聯絡人 客戶聯絡人 = contractRepo.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -91,13 +89,13 @@ namespace MVC5Homework.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dbCust = (客戶資料Entities1)repo.UnitOfWork.Context;
+                var dbCust = (客戶資料Entities1)contractRepo.UnitOfWork.Context;
                 客戶聯絡人.是否刪除 = false;
                 dbCust.Entry(客戶聯絡人).State = EntityState.Modified;
-                repo.UnitOfWork.Commit();
+                contractRepo.UnitOfWork.Commit();
                 return RedirectToAction("客戶聯絡人Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -108,7 +106,7 @@ namespace MVC5Homework.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = repo.Find(id.Value);
+            客戶聯絡人 客戶聯絡人 = contractRepo.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -121,9 +119,9 @@ namespace MVC5Homework.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult 客戶聯絡人DeleteConfirmed(int id)
         {
-            var one = repo.Find(id);
-            repo.Delete(one);
-            repo.UnitOfWork.Commit();
+            var one = contractRepo.Find(id);
+            contractRepo.Delete(one);
+            contractRepo.UnitOfWork.Commit();
             return RedirectToAction("客戶聯絡人Index");
         }
 
@@ -131,7 +129,7 @@ namespace MVC5Homework.Controllers
         {
             if (disposing)
             {
-                repo.UnitOfWork.Context.Dispose();
+                contractRepo.UnitOfWork.Context.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -150,7 +148,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(5).SetCellValue("電話");
 
             var i = 0;
-            var data = repo.All().ToList();
+            var data = contractRepo.All().ToList();
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
