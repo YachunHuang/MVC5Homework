@@ -1,14 +1,15 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-	
+using System.Web.Mvc;
+
 namespace MVC5Homework.Models
 {   
 	public  class 客戶資料Repository : EFRepository<客戶資料>, I客戶資料Repository
 	{
-        public override IQueryable<客戶資料> All()
+        public virtual IQueryable<客戶資料> All(string includeProperties = "")
         {
-            return base.All().Where(p => p.是否刪除 == false);
+            return base.All().Include(includeProperties).Where(p => p.是否刪除 == false);
         }
 
         public 客戶資料 Find(int id)

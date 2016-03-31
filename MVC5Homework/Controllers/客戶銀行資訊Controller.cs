@@ -16,7 +16,7 @@ namespace MVC5Homework.Controllers
         // GET: 客戶銀行資訊
         public ActionResult 客戶銀行資訊Index(string keyword)
         {
-            var 客戶銀行資訊 = bankRepo.All().Include(客 => 客.客戶資料)
+            var 客戶銀行資訊 = bankRepo.All(includeProperties: "客戶資料")
                 .Where(客 => (客.是否刪除 == false || 客.是否刪除 == null) &&
             (keyword == "" || keyword == null ||
             客.帳戶名稱.Contains(keyword) ||

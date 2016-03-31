@@ -6,9 +6,9 @@ namespace MVC5Homework.Models
 {   
 	public  class 客戶聯絡人Repository : EFRepository<客戶聯絡人>, I客戶聯絡人Repository
 	{
-        public override IQueryable<客戶聯絡人> All()
+        public virtual IQueryable<客戶聯絡人> All(string includeProperties = "")
         {
-            return base.All().Where(p => p.是否刪除 == false);
+            return base.All().Include(includeProperties).Where(p => p.是否刪除 == false);
         }
 
         public 客戶聯絡人 Find(int id)

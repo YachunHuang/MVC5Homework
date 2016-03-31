@@ -19,7 +19,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id=""});
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            return View(custRepo.All().Include(類 => 類.客戶分類).Where(客 => 客.是否刪除 == false &&
+            return View(custRepo.All(includeProperties: "客戶分類").Where(客 => 客.是否刪除 == false &&
              (keyword == "" || keyword == null || 客.客戶名稱.Contains(keyword)) &&
              (客.客戶分類Id == custData.客戶分類Id || custData.客戶分類Id==0)).ToList());
         }
@@ -30,7 +30,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類");
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            return View(custRepo.All().Include(類 => 類.客戶分類).Where(客 => 客.是否刪除 == false &&
+            return View(custRepo.All(includeProperties: "客戶分類").Where(客 => 客.是否刪除 == false &&
              (keyword == "" || keyword == null || 客.客戶名稱.Contains(keyword)) &&
              (客.客戶分類Id == custData.客戶分類Id || custData.客戶分類Id == 0)).ToList());
         }

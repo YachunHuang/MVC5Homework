@@ -16,7 +16,7 @@ namespace MVC5Homework.Controllers
         // GET: 客戶聯絡人
         public ActionResult 客戶聯絡人Index(string keyword = "")
         {
-            var 客戶聯絡人 = contractRepo.All().Include(客 => 客.客戶資料)
+            var 客戶聯絡人 = contractRepo.All( includeProperties: "客戶資料")
                 .Where(user => (user.是否刪除 == false || user.是否刪除 == null)
                 && (keyword == "" || keyword == null || user.姓名.Contains(keyword)));
             ViewBag.客戶名稱 = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
@@ -140,6 +140,8 @@ namespace MVC5Homework.Controllers
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
 
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            var data = contractRepo.All().ToList();
+
             row1.CreateCell(0).SetCellValue("客戶名稱");
             row1.CreateCell(1).SetCellValue("職稱");
             row1.CreateCell(2).SetCellValue("姓名");
@@ -148,7 +150,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(5).SetCellValue("電話");
 
             var i = 0;
-            var data = contractRepo.All().ToList();
+            
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
