@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using MVC5Homework.Models;
 using System.IO;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
 
 namespace MVC5Homework.Controllers
 {
@@ -15,7 +17,7 @@ namespace MVC5Homework.Controllers
     {
         // GET: 客戶銀行資訊
         public ActionResult 客戶銀行資訊Index(string keyword)
-        {
+        { 
             var 客戶銀行資訊 = bankRepo.All(includeProperties: "客戶資料")
                 .Where(客 => (客.是否刪除 == false || 客.是否刪除 == null) &&
             (keyword == "" || keyword == null ||
@@ -45,7 +47,7 @@ namespace MVC5Homework.Controllers
         // GET: 客戶銀行資訊/Create
         public ActionResult 客戶銀行資訊Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -64,7 +66,7 @@ namespace MVC5Homework.Controllers
                 return RedirectToAction("客戶銀行資訊Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -80,7 +82,7 @@ namespace MVC5Homework.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -99,7 +101,7 @@ namespace MVC5Homework.Controllers
                 bankRepo.UnitOfWork.Commit();
                 return RedirectToAction("客戶銀行資訊Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 

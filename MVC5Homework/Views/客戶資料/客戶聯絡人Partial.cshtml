@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<MVC5Homework.Models.客戶聯絡人>
-
 @{
     ViewBag.Title = "客戶聯絡人Partial";
 }
@@ -33,7 +32,11 @@
             <th></th>
         </tr>
         @{
-            var data = Model.ToList();
+            var data = new List<MVC5Homework.Models.客戶聯絡人>();
+            if (Model != null)
+            {
+                data = Model.ToList();
+            }
         }
         @for (int i = 0; i < data.Count; i++)
         {

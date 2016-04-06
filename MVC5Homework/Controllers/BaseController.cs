@@ -13,5 +13,6 @@ namespace MVC5Homework.Controllers
         protected 客戶聯絡人Repository contractRepo = RepositoryHelper.Get客戶聯絡人Repository();
         protected 客戶資料Repository custRepo = RepositoryHelper.Get客戶資料Repository();
         protected 客戶銀行資訊Repository bankRepo = RepositoryHelper.Get客戶銀行資訊Repository();
+       
     }
 }

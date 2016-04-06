@@ -251,6 +251,9 @@
     <Compile Include="Models\客戶分類.cs">
       <DependentUpon>CustomData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\客戶分類Repository.cs">
+      <DependentUpon>IRepository.EF6.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\客戶聯絡人.cs">
       <DependentUpon>CustomData.tt</DependentUpon>
     </Compile>

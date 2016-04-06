@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace MVC5Homework.Models
 {   
