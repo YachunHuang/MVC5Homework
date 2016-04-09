@@ -35,7 +35,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Kiwi ASP.NET 應用程式</p>
+            <p>&copy; @DateTime.Now.Year - Kiwi ASP.NET 應用程式 @ViewBag.dtTimespan</p>
         </footer>
     </div>
 
@@ -44,3 +44,14 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+@section scripts
+{
+    <script>
+        $(function() {
+            alert(@ViewBag.dtTimespan);
+                if (window.console) {
+                    console.log(@ViewBag.dtTimespan);
+                }
+        });
+    </script>
+}

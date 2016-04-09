@@ -8,33 +8,55 @@ using System.Web;
 using System.Web.Mvc;
 using MVC5Homework.Models;
 using System.IO;
+using PagedList;
 
 namespace MVC5Homework.Controllers
 {
+    [計算Action的執行時間]
     public class 客戶資料Controller : BaseController
     {
+        private int pageSize = 2;
+
         // GET: 客戶資料
-        public ActionResult 客戶資料Index(string keyword, 客戶資料 custData)
+        public ActionResult 客戶資料Index(string keyword, int? 客戶分類Id, string sortOrder, int page = 1)
         {
-            ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id=""});
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "客戶名稱 desc";
+            }
+
+            ViewBag.NameSortParm = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
+
+
+            if (客戶分類Id == null) { 客戶分類Id = 0; }
+            int currentPage = page < 1 ? 1 : page;
+
+            ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id = "" });
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            return View(custRepo.All(includeProperties: "客戶分類").Where(客 => 客.是否刪除 == false &&
-             (keyword == "" || keyword == null || 客.客戶名稱.Contains(keyword)) &&
-             (客.客戶分類Id == custData.客戶分類Id || custData.客戶分類Id==0)).ToList());
+            TempData["Keyword"] = keyword;
+            TempData["SelectValue"] = 客戶分類Id;
+            var customers = custRepo.Where(keyword, 客戶分類Id);
+
+            switch (sortOrder)
+            {
+                case "客戶名稱 desc":
+                    customers = customers.OrderByDescending(s => s.客戶名稱);
+                    break;
+                case "客戶名稱":
+                    customers = customers.OrderBy(s => s.客戶名稱);
+                    break;
+            }
+
+
+            return View(customers.ToPagedList(currentPage, pageSize));
         }
 
-        [HttpPost, ActionName("客戶資料Index")]
-        public ActionResult 客戶資料IndexQuery(string keyword, 客戶資料 custData)
-        {
-            ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類");
-            ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
-
-            return View(custRepo.All(includeProperties: "客戶分類").Where(客 => 客.是否刪除 == false &&
-             (keyword == "" || keyword == null || 客.客戶名稱.Contains(keyword)) &&
-             (客.客戶分類Id == custData.客戶分類Id || custData.客戶分類Id == 0)).ToList());
-        }
-
+        /// <summary>
+        /// 客戶聯絡人Partial給資料
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult 客戶聯絡人Partial(int id)
         {
             return View(contractRepo.All().Where(u => u.客戶Id == id).ToList());
@@ -77,7 +99,7 @@ namespace MVC5Homework.Controllers
 
             return View();
         }
-     
+
 
         // GET: 客戶資料/Create
         public ActionResult 客戶資料Create()
@@ -91,11 +113,12 @@ namespace MVC5Homework.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult 客戶資料Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料)
+        public ActionResult 客戶資料Create([Bind(Include = "Id,帳號,密碼,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
                 客戶資料.是否刪除 = false;
+                客戶資料.密碼 = HashPassword(客戶資料.密碼);
                 custRepo.Add(客戶資料);
                 custRepo.UnitOfWork.Commit();
                 return RedirectToAction("客戶資料Index");
@@ -117,6 +140,7 @@ namespace MVC5Homework.Controllers
             {
                 return HttpNotFound();
             }
+            TempData["PassWord"] = 客戶資料.密碼;
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", 客戶資料.客戶分類Id);
             return View(客戶資料);
         }
@@ -126,12 +150,19 @@ namespace MVC5Homework.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult 客戶資料Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料)
+        public ActionResult 客戶資料Edit([Bind(Include = "Id,帳號,密碼,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
                 var dbCust = (客戶資料Entities1)custRepo.UnitOfWork.Context;
                 客戶資料.是否刪除 = false;
+
+                //密碼有修改的話則需要重新編碼
+                if (客戶資料.密碼 != Convert.ToString(TempData["PassWord"]))
+                {
+                    客戶資料.密碼 = HashPassword(客戶資料.密碼);
+                }
+
                 dbCust.Entry(客戶資料).State = EntityState.Modified;
                 custRepo.UnitOfWork.Commit();
                 return RedirectToAction("客戶資料Index");
@@ -174,9 +205,11 @@ namespace MVC5Homework.Controllers
             }
             base.Dispose(disposing);
         }
-
-        public FileResult ExportData()
+ 
+        [HttpPost]
+        public FileResult ExportData(string indexQueryKeyword, string indexCustType)
         {
+            var custtype = Convert.ToInt16(indexCustType);
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
 
@@ -190,7 +223,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(6).SetCellValue("Email");
 
             var i = 0;
-            var data = custRepo.All().ToList();
+            var data = custRepo.Where(indexQueryKeyword, custtype).ToList();
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);

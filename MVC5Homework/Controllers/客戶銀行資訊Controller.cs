@@ -18,15 +18,8 @@ namespace MVC5Homework.Controllers
         // GET: 客戶銀行資訊
         public ActionResult 客戶銀行資訊Index(string keyword)
         { 
-            var 客戶銀行資訊 = bankRepo.All(includeProperties: "客戶資料")
-                .Where(客 => (客.是否刪除 == false || 客.是否刪除 == null) &&
-            (keyword == "" || keyword == null ||
-            客.帳戶名稱.Contains(keyword) ||
-            客.銀行名稱.Contains(keyword) ||
-            客.帳戶號碼.Contains(keyword)  ||
-            客.帳戶名稱.Contains(keyword) ||
-            客.客戶資料.客戶名稱.Contains(keyword)));
-            return View(客戶銀行資訊.ToList());
+            TempData["Keyword"] = keyword;
+            return View(bankRepo.Where(keyword).ToList());
         }
 
         // GET: 客戶銀行資訊/Details/5
@@ -140,7 +133,8 @@ namespace MVC5Homework.Controllers
             base.Dispose(disposing);
         }
 
-        public FileResult ExportData()
+        [HttpPost]
+        public FileResult ExportData(string indexQueryKeyword)
         {
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
@@ -154,7 +148,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(5).SetCellValue("帳戶號碼");
 
             var i = 0;
-            var data = bankRepo.All().ToList();
+            var data = bankRepo.Where(indexQueryKeyword).ToList();
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);

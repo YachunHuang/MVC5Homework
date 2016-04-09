@@ -8,14 +8,43 @@ namespace MVC5Homework.Models
 {   
 	public  class 客戶資料Repository : EFRepository<客戶資料>, I客戶資料Repository
 	{
-        public virtual IQueryable<客戶資料> All(string includeProperties = "")
+        private IQueryable<客戶資料> _all;
+        private string _includeProperties = "客戶分類";
+        private IQueryable<客戶資料> _includeResult;
+
+        public virtual IQueryable<客戶資料> All()
         {
-            return base.All().Include(includeProperties).Where(p => p.是否刪除 == false);
+            _all = base.All();
+
+            return _all;
+        }
+
+        public IQueryable<客戶資料> Include(string includeProperties)
+        {
+            _includeResult = All().Include(includeProperties);
+            return _includeResult;
+        }
+
+        public IQueryable<客戶資料> Where(string keyword, int? custTypeId)
+        {
+            return All().Include(_includeProperties).Where(客 => 客.是否刪除 == false &&
+             (keyword == "" || keyword == null || 客.客戶名稱.Contains(keyword)) &&
+             (客.客戶分類Id == custTypeId || custTypeId == 0));
+        }
+
+        /// <summary>
+        /// 判斷登入帳號
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        internal 客戶資料 GetCustData(string account)
+        {
+            return All().Include(_includeProperties).Where(客 => 客.是否刪除 == false && 客.帳號 == account).FirstOrDefault();
         }
 
         public 客戶資料 Find(int id)
         {
-            return this.All().FirstOrDefault(i => i.Id == id);
+            return All().FirstOrDefault(i => i.Id == id);
         }
 
         public virtual void Delete(客戶資料 entity)

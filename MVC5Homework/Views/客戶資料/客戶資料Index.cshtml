@@ -1,85 +1,106 @@
-﻿@model IEnumerable<MVC5Homework.Models.客戶資料>
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<MVC5Homework.Models.客戶資料>
 
 @{
     ViewBag.Title = "客戶資料Index";
 }
 
+@{
+    <link href="~/Content/PagedList.css" rel="stylesheet"/>
+ }
+
 <h2>客戶資料Index</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("客戶資料Index", "客戶資料"))
 {
     @Html.AntiForgeryToken()
     <p>
-
         <table>
             <tr>
-                <td>@Html.ActionLink("Create New", "客戶資料Create") |</td>
-                <td>@Html.ActionLink("Export", "ExportData") |</td>
+                @{
+                    if (Context.User.IsInRole("board_admin"))
+                    {
+                        <td>@Html.ActionLink("Create New", "客戶資料Create") |</td>
+                    }
+                }
+                <td>
+                    <input type="submit" class="btn btn-default" value="Export" formaction="@Url.Action("ExportData")" />
+                    @Html.Hidden("indexCustType", @TempData["SelectValue"])
+                    @Html.Hidden("indexQueryKeyword", @TempData["Keyword"]) |
+                </td>
+
                 <td><input class="form-control" id="txtKeyword" name="keyword" type="text" /></td>
                 <td>
-                    @Html.DropDownList("客戶分類Id", null,"全部", htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownList("客戶分類Id", null, "全部", htmlAttributes: new { @class = "form-control" })
                 </td>
-                <td><input type="submit" class="btn btn-default" value="搜尋"></td>
+                <td><input type="submit" class="btn btn-default" value="Search" formaction="@Url.Action("客戶資料Index")"></td>
             </tr>
         </table>
     </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.客戶分類.分類)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.客戶名稱)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.統一編號)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.電話)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.傳真)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.地址)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.客戶分類.分類)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.客戶名稱)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.統一編號)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.電話)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.傳真)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.地址)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "客戶資料Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "客戶資料Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "客戶資料Delete", new { id = item.Id })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model=>model.FirstOrDefault().客戶分類.分類)
+            </th>
+            <th>
+                @Html.ActionLink("客戶名稱", "客戶資料Index", new { sortOrder = ViewBag.NameSortParm, keyword= @TempData["Keyword"] , 客戶分類Id = @TempData["SelectValue"] })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().傳真)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().地址)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.客戶分類.分類)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.客戶名稱)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.統一編號)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.電話)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.傳真)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.地址)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @{
+                    if (Context.User.IsInRole("board_admin"))
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "客戶資料Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Details", "客戶資料Details", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "客戶資料Delete", new { id = item.Id })
+                        </td>
+                    }
+                }
+            </tr>
+                    }
+
+    </table>
+    @Html.PagedListPager(Model, page => Url.Action("客戶資料Index",new { page, keyword= TempData["Keyword"], 客戶分類Id = TempData["SelectValue"] }))
 }

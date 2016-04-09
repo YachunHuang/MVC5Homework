@@ -11,14 +11,12 @@ using System.IO;
 
 namespace MVC5Homework.Controllers
 {
-    public class CustomController : Controller
+    public class CustomController : BaseController
     {
-        private 客戶資料Entities1 db = new 客戶資料Entities1();
-
         // GET: Custom
         public ActionResult Index()
         {
-            return View(db.客戶資料.ToList());
+            return View(custRepo.All().ToList());
         }
 
         protected override void Dispose(bool disposing)
@@ -32,8 +30,14 @@ namespace MVC5Homework.Controllers
 
         public ActionResult ReadCustomView()
         {
+            //var data = db.CustomView.AsQueryable();
+            return View();
+        }
+
+        public JsonResult GetTotalCust()
+        {
             var data = db.CustomView.AsQueryable();
-            return View(data);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public FileResult ExportData()
@@ -57,7 +61,7 @@ namespace MVC5Homework.Controllers
                 i++;
             }
 
-            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            MemoryStream ms = new MemoryStream();
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", "ReadCustomView.xls");
