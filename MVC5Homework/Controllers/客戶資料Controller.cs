@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using MVC5Homework.Models;
 using System.IO;
 using PagedList;
+using System.Linq.Dynamic;
 
 namespace MVC5Homework.Controllers
 {
@@ -25,7 +26,7 @@ namespace MVC5Homework.Controllers
                 sortOrder = "客戶名稱 desc";
             }
 
-            ViewBag.NameSortParm = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
+            sortOrder = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
 
 
             if (客戶分類Id == null) { 客戶分類Id = 0; }
@@ -34,19 +35,17 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id = "" });
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            TempData["Keyword"] = keyword;
-            TempData["SelectValue"] = 客戶分類Id;
-            var customers = custRepo.Where(keyword, 客戶分類Id);
+            var customers = custRepo.Where(keyword, 客戶分類Id).OrderBy(sortOrder);
 
-            switch (sortOrder)
-            {
-                case "客戶名稱 desc":
-                    customers = customers.OrderByDescending(s => s.客戶名稱);
-                    break;
-                case "客戶名稱":
-                    customers = customers.OrderBy(s => s.客戶名稱);
-                    break;
-            }
+            //switch (sortOrder)
+            //{
+            //    case "客戶名稱 desc":
+            //        customers = customers.OrderByDescending(s => s.客戶名稱);
+            //        break;
+            //    case "客戶名稱":
+            //        customers = customers.OrderBy(s => s.客戶名稱);
+            //        break;
+            //}
 
 
             return View(customers.ToPagedList(currentPage, pageSize));
@@ -206,10 +205,10 @@ namespace MVC5Homework.Controllers
             base.Dispose(disposing);
         }
  
-        [HttpPost]
-        public FileResult ExportData(string indexQueryKeyword, string indexCustType)
+        //[HttpPost]
+        public FileResult ExportData(string keyword, int 客戶分類Id)
         {
-            var custtype = Convert.ToInt16(indexCustType);
+            var custtype = 客戶分類Id;
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
 
@@ -223,7 +222,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(6).SetCellValue("Email");
 
             var i = 0;
-            var data = custRepo.Where(indexQueryKeyword, custtype).ToList();
+            var data = custRepo.Where(keyword, custtype).ToList();
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);

@@ -92,3 +92,11 @@
     </table>
     @Html.PagedListPager(Model, page => Url.Action("客戶聯絡人Index", new { page, 職稱 = TempData["Title"] }))
                     }
+
+@section breadcrumb
+{
+    <li>
+        <a href="@Url.Action("客戶聯絡人Index","客戶聯絡人")">客戶聯絡人</a>
+        <i class="icon-angle-right"></i>
+    </li>
+}

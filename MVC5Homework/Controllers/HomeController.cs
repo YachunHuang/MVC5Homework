@@ -26,5 +26,10 @@ namespace MVC5Homework.Controllers
 
             return View();
         }
+
+        public ActionResult NewIndex()
+        {
+            return View();
+        }
     }
 }

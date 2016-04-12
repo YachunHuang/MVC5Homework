@@ -55,3 +55,11 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+@section breadcrumb
+{
+    <li>
+        <a href="@Url.Action("Login","Account")">登入</a>
+        <i class="icon-angle-right"></i>
+    </li>
+}

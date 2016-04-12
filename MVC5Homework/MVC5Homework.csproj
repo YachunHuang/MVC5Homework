@@ -75,6 +75,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -294,13 +298,53 @@
   <ItemGroup>
     <Content Include="App_Data\客戶資料.mdf" />
     <Content Include="App_Data\客戶資料_log.ldf" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\font-awesome.css" />
+    <Content Include="assets\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\images\apple-touch-icon-114x114-precomposed.png" />
+    <Content Include="assets\images\apple-touch-icon-144x144-precomposed.png" />
+    <Content Include="assets\images\apple-touch-icon-57x57-precomposed.png" />
+    <Content Include="assets\images\apple-touch-icon-72x72-precomposed.png" />
+    <Content Include="assets\images\apple-touch-icon-precomposed.png" />
+    <Content Include="assets\images\apple-touch-icon.png" />
+    <Content Include="assets\images\favicon.ico" />
+    <Content Include="assets\images\sprite.png" />
+    <Content Include="assets\img\1.png" />
+    <Content Include="assets\img\2.png" />
+    <Content Include="assets\img\3.png" />
+    <Content Include="assets\img\4.png" />
+    <Content Include="assets\img\find_user.png" />
+    <Content Include="assets\javascripts\vendor\html5shiv.js" />
+    <Content Include="assets\javascripts\vendor\jquery.knob.js" />
+    <Content Include="assets\javascripts\vendor\plugins.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\custom.js" />
+    <Content Include="assets\js\dataTables\dataTables.bootstrap.css" />
+    <Content Include="assets\js\dataTables\dataTables.bootstrap.js" />
+    <Content Include="assets\js\dataTables\jquery.dataTables.js" />
+    <Content Include="assets\js\jquery-1.10.2.js" />
+    <Content Include="assets\js\jquery.metisMenu.js" />
+    <Content Include="assets\js\morris\morris-0.4.3.min.css" />
+    <Content Include="assets\js\morris\morris.js" />
+    <Content Include="assets\js\morris\raphael-2.1.0.min.js" />
+    <Content Include="assets\lineicons\fonts\linecons.svg" />
+    <Content Include="assets\lineicons\index.html" />
+    <Content Include="assets\lineicons\lte-ie7.js" />
+    <Content Include="assets\lineicons\style.css" />
+    <Content Include="blank.html" />
+    <Content Include="chart.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="form.html" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="index.html" />
+    <Content Include="login.html" />
     <Content Include="Models\CustomData.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>CustomData.edmx</DependentUpon>
@@ -319,6 +363,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IRepository.EF6.cs</LastGenOutput>
     </Content>
+    <Content Include="registeration.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\CustomData.edmx">
@@ -328,6 +373,25 @@
     <Content Include="Models\CustomData.edmx.diagram">
       <DependentUpon>CustomData.edmx</DependentUpon>
     </Content>
+    <Content Include="assets\.DS_Store" />
+    <Content Include="assets\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\javascripts\application.js.coffee" />
+    <Content Include="assets\lineicons\.DS_Store" />
+    <Content Include="assets\lineicons\fonts\.DS_Store" />
+    <Content Include="assets\lineicons\fonts\linecons.eot" />
+    <Content Include="assets\lineicons\fonts\linecons.ttf" />
+    <Content Include="assets\lineicons\fonts\linecons.woff" />
+    <Content Include="assets\stylesheets\application.css.sass" />
+    <Content Include="assets\stylesheets\_bootstrap_overrides.css.sass" />
+    <Content Include="assets\stylesheets\_color-swatches.css.sass" />
+    <Content Include="assets\stylesheets\_mixins.css.sass" />
+    <Content Include="assets\stylesheets\_variables.css.sass" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -340,6 +404,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="tab-panel.html" />
+    <Content Include="table.html" />
+    <Content Include="ui.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -395,6 +462,8 @@
     <Content Include="Views\Shared\Error2.cshtml" />
     <Content Include="Views\Account\EditProfile.cshtml" />
     <Content Include="Views\客戶資料\客戶資料Partial.cshtml" />
+    <Content Include="Views\Home\NewIndex.cshtml" />
+    <Content Include="Views\Shared\_Layout2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
