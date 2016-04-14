@@ -1,10 +1,5 @@
 ﻿@model MVC5Homework.Models.客戶聯絡人
 
-@{
-    ViewBag.Title = "客戶聯絡人Delete";
-}
-
-<h2>客戶聯絡人Delete</h2>
 <div>
     <h4>客戶聯絡人</h4>
     <hr />
@@ -58,24 +53,4 @@
         </dd>
 
     </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "客戶聯絡人Index")
-        </div>
-    }
 </div>
-@section breadcrumb
-{
-    <li>
-        <a href="@Url.Action("客戶聯絡人Index","客戶聯絡人")">客戶聯絡人</a>
-        <i class="icon-angle-right"></i>
-    </li>
-    <li>
-        <a href="@Url.Action("客戶聯絡人Delete","客戶聯絡人")">Delete</a>
-        <i class="icon-angle-right"></i>
-    </li>
-}

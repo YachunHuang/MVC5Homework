@@ -9,41 +9,28 @@ using System.Web.Mvc;
 using MVC5Homework.Models;
 using System.IO;
 using PagedList;
+using System.Linq.Dynamic;
 
 namespace MVC5Homework.Controllers
 {
     public class 客戶聯絡人Controller : BaseController
     {
-        private int pageSize = 2;
         // GET: 客戶聯絡人
         public ActionResult 客戶聯絡人Index(string keyword, string 職稱, string sortOrder, int page = 1)
         {
-            
+            int currentPage = page < 1 ? 1 : page;
             if (string.IsNullOrEmpty(sortOrder))
             {
-                sortOrder = "客戶名稱 desc";
+                sortOrder = "姓名 desc";
             }
 
-            ViewBag.NameSortParm = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
-            int currentPage = page < 1 ? 1 : page;
-            var contacts = contractRepo.Where(keyword, 職稱);
-            switch (sortOrder)
-            {
-                case "客戶名稱 desc":
-                    contacts = contacts.OrderByDescending(s => s.客戶資料.客戶名稱);
-                    break;
-                case "客戶名稱":
-                    contacts = contacts.OrderBy(s => s.客戶資料.客戶名稱);
-                    break;
-            }
-
+            ViewBag.NameSortParm = sortOrder == "姓名" ? "姓名 desc" : "姓名";
             ViewBag.職稱 = new SelectList(contractRepo.GetUserTitle(), "", "");
             ViewBag.客戶名稱 = new SelectList(custRepo.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
 
-            TempData["Keyword"] = keyword;
-            TempData["Title"] = 職稱;
-            
-            return View(contacts.ToPagedList(currentPage,pageSize));
+            var contacts = contractRepo.Where(keyword, 職稱).OrderBy(sortOrder).ToPagedList(currentPage, pageSize);
+
+            return View(contacts);
         }
 
         // GET: 客戶聯絡人/Details/5
@@ -166,14 +153,13 @@ namespace MVC5Homework.Controllers
             base.Dispose(disposing);
         }
 
-        [HttpPost]
-        public FileResult ExportData(string indexQueryKeyword, string indexQueryTitle)
+        public FileResult ExportData(string keyword, string 職稱)
         {
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
 
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
-            var data = contractRepo.Where(indexQueryKeyword, indexQueryTitle).ToList();
+            var data = contractRepo.Where(keyword, 職稱).ToList();
 
             row1.CreateCell(0).SetCellValue("客戶名稱");
             row1.CreateCell(1).SetCellValue("職稱");

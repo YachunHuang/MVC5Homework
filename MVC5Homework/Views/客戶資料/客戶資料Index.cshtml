@@ -7,17 +7,15 @@
 }
 
 @{
-    <link href="~/Content/PagedList.css" rel="stylesheet"/>
- }
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+}
 
 <h2>客戶資料Index</h2>
 
 @using (Html.BeginForm("客戶資料Index", "客戶資料", FormMethod.Get, new { name = "form1" }))
 {
-
     @Html.Hidden("sortOrder")
     @Html.Hidden("page")
-    
     <p>
         <table>
             <tr>
@@ -28,31 +26,29 @@
                     }
                 }
                 <td>
-                    <input type="submit" class="btn btn-default" value="Export" formaction="@Url.Action("ExportData")" />
-                </td>
-
-                <td>
                     @Html.TextBox("keyword", null, new { @class = "form-control" })
                 </td>
                 <td>
                     @Html.DropDownList("客戶分類Id", null, "全部", htmlAttributes: new { @class = "form-control" })
                 </td>
-                <td><input type="submit" class="btn btn-default" value="Search" 
-                           formaction="@Url.Action("客戶資料Index")"></td>
+                <td>
+                    <input type="submit" class="btn btn-default" value="Search">|
+                </td>
+                <td>
+                    <input type="submit" class="btn btn-default" value="Export" formaction="@Url.Action("ExportData")" />|
+                </td>
             </tr>
         </table>
     </p>
     <table class="table">
         <tr>
             <th>
-            <th>
                 @Html.DisplayNameFor(model => model.客戶分類.分類)
             </th>
-            </th>
             <th>
-                <a href="@Url.Action("客戶名稱", "客戶資料Index")"
-                   onclick="return MakeSort('客戶名稱');">
-                @Html.DisplayNameFor(model => model.客戶名稱)
+                <a href="@Url.Action("客戶資料Index", "客戶資料")"
+                   onclick="return MakeSort('@ViewBag.NameSortParm');">
+                    @Html.DisplayNameFor(model => model.客戶名稱)
                 </a>
             </th>
             <th>
@@ -119,8 +115,9 @@
     <script>
         $(function () {
             $('.pagination-container a').on('click', function () {
-
-                document.form1.page.value = $(this).text();
+                var href = $(this).attr('href');
+                var pars = href.substring(href.indexOf('?page=') + 6);
+                document.form1.page.value = pars;
                 document.form1.submit();
                 return false;
             })

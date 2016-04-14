@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Collections;
+using System.Linq.Expressions;
 
 namespace MVC5Homework.Models
 {
@@ -32,12 +33,22 @@ namespace MVC5Homework.Models
                 && (title == "" || title == null || user.職稱.Contains(title)) );
         }
 
+        /// <summary>
+        /// 依客戶ID取得客戶聯絡人
+        /// </summary>
+        /// <param name="id">客戶ID</param>
+        /// <returns></returns>
+        public IQueryable<客戶聯絡人> Where(int id)
+        {
+            return All().Include(_includeProperties).Where(user => (user.是否刪除 == false || user.是否刪除 == null) && user.客戶Id == id);
+        }
+
         public 客戶聯絡人 Find(int id)
         {
             return All().FirstOrDefault(i => i.Id == id);
         }
 
-        public virtual void Delete(客戶聯絡人 entity)
+        public virtual new void Delete(客戶聯絡人 entity)
         {
             entity.是否刪除 = true;
         }

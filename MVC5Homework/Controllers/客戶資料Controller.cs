@@ -16,39 +16,22 @@ namespace MVC5Homework.Controllers
     [計算Action的執行時間]
     public class 客戶資料Controller : BaseController
     {
-        private int pageSize = 2;
-
         // GET: 客戶資料
         public ActionResult 客戶資料Index(string keyword, int? 客戶分類Id, string sortOrder, int page = 1)
         {
+            if (客戶分類Id == null) { 客戶分類Id = 0; }
+            int currentPage = page < 1 ? 1 : page;
             if (string.IsNullOrEmpty(sortOrder))
             {
                 sortOrder = "客戶名稱 desc";
             }
-
-            sortOrder = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
-
-
-            if (客戶分類Id == null) { 客戶分類Id = 0; }
-            int currentPage = page < 1 ? 1 : page;
-
+            ViewBag.NameSortParm = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id = "" });
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            var customers = custRepo.Where(keyword, 客戶分類Id).OrderBy(sortOrder);
+            var customers = custRepo.Where(keyword, 客戶分類Id).OrderBy(sortOrder).ToPagedList(currentPage, pageSize);
 
-            //switch (sortOrder)
-            //{
-            //    case "客戶名稱 desc":
-            //        customers = customers.OrderByDescending(s => s.客戶名稱);
-            //        break;
-            //    case "客戶名稱":
-            //        customers = customers.OrderBy(s => s.客戶名稱);
-            //        break;
-            //}
-
-
-            return View(customers.ToPagedList(currentPage, pageSize));
+            return View(customers);
         }
 
         /// <summary>
@@ -58,7 +41,7 @@ namespace MVC5Homework.Controllers
         /// <returns></returns>
         public ActionResult 客戶聯絡人Partial(int id)
         {
-            return View(contractRepo.All().Where(u => u.客戶Id == id).ToList());
+            return PartialView(contractRepo.Where(id).ToList());
         }
 
         // GET: 客戶資料/Details/5
@@ -93,7 +76,7 @@ namespace MVC5Homework.Controllers
                 db.SaveChanges();
 
                 var 客戶聯絡人 = db.客戶聯絡人.Where(u => u.是否刪除 == false && u.客戶Id == custId);
-                return View(客戶聯絡人.ToList());
+                return PartialView(客戶聯絡人.ToList());
             }
 
             return View();

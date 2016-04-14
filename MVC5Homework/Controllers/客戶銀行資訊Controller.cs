@@ -10,16 +10,23 @@ using MVC5Homework.Models;
 using System.IO;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
+using PagedList;
+using System.Linq.Dynamic;
 
 namespace MVC5Homework.Controllers
 {
     public class 客戶銀行資訊Controller : BaseController
     {
         // GET: 客戶銀行資訊
-        public ActionResult 客戶銀行資訊Index(string keyword)
-        { 
-            TempData["Keyword"] = keyword;
-            return View(bankRepo.Where(keyword).ToList());
+        public ActionResult 客戶銀行資訊Index(string keyword, string sortOrder, int page = 1)
+        {
+            int currentPage = page < 1 ? 1 : page;
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "銀行名稱 desc";
+            }
+            ViewBag.NameSortParm = sortOrder == "銀行名稱" ? "銀行名稱 desc" : "銀行名稱";
+            return View(bankRepo.Where(keyword).OrderBy(sortOrder).ToPagedList(currentPage,pageSize));
         }
 
         // GET: 客戶銀行資訊/Details/5
@@ -133,8 +140,7 @@ namespace MVC5Homework.Controllers
             base.Dispose(disposing);
         }
 
-        [HttpPost]
-        public FileResult ExportData(string indexQueryKeyword)
+        public FileResult ExportData(string keyword)
         {
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
@@ -148,7 +154,7 @@ namespace MVC5Homework.Controllers
             row1.CreateCell(5).SetCellValue("帳戶號碼");
 
             var i = 0;
-            var data = bankRepo.Where(indexQueryKeyword).ToList();
+            var data = bankRepo.Where(keyword).ToList();
             foreach (var item in data)
             {
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);

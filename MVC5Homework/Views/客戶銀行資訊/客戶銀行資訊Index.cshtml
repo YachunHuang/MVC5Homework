@@ -1,12 +1,16 @@
-﻿@model IEnumerable<MVC5Homework.Models.客戶銀行資訊>
+﻿@using PagedList
+@using PagedList.Mvc
+@model Tuple<IEnumerable<MVC5Homework.Models.客戶銀行資訊>, IPagedList<MVC5Homework.Models.客戶銀行資訊>>
 
 @{
     ViewBag.Title = "客戶銀行資訊Index";
 }
 
 <h2>客戶銀行資訊Index</h2>
-@using (Html.BeginForm())
+@using (Html.BeginForm("客戶銀行資訊Index", "客戶銀行資訊", FormMethod.Get, new { name = "form3" }))
 {
+    @Html.Hidden("sortOrder")
+    @Html.Hidden("page")
     <p>
         <table>
             <tr>
@@ -16,13 +20,14 @@
                         <td>@Html.ActionLink("Create New", "客戶銀行資訊Create") |</td>
                     }
                 }
-                <td>
-                    <input type="submit" class="btn btn-default" value="Export" formaction="@Url.Action("ExportData")" />
-                    @Html.Hidden("indexQueryKeyword", @TempData["Keyword"])
-                    |
-                </td>
+
                 <td><input class="form-control" id="txtKeyword" name="keyword" type="text" /></td>
-                <td><input type="submit" class="btn btn-default" value="搜尋" formaction="@Url.Action("客戶銀行資訊Index")"></td>
+                <td>
+                    <input type="submit" class="btn btn-default" value="Search" formaction="@Url.Action("客戶銀行資訊Index")">|
+                </td>
+                <td>
+                    <input type="submit" class="btn btn-default" value="Export" formaction="@Url.Action("ExportData")" />|
+                </td>
             </tr>
         </table>
     </p>
@@ -33,7 +38,9 @@
                 @Html.DisplayNameFor(model => model.客戶資料.客戶名稱)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.銀行名稱)
+                <a href="@Url.Action("客戶銀行資訊Index","客戶銀行資訊")" onclick="return MakeSort('@ViewBag.NameSortParm');">
+                    @Html.DisplayNameFor(model => model.銀行名稱)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.銀行代碼)
@@ -85,7 +92,29 @@
                     }
 
     </table>
-                    }
+    @Html.PagedListPager(Model as IPagedList, page => Url.Action("客戶銀行資訊Index", new { page }))
+}
+
+@section scripts {
+
+    <script>
+        $(function () {
+            $('.pagination-container a').on('click', function () {
+                var href = $(this).attr('href');
+                var pars = href.substring(href.indexOf('?page=') + 6);
+                document.form1.page.value = pars;
+                document.form1.submit();
+                return false;
+            })
+        })
+
+        function MakeSort(column) {
+            document.form3.sortOrder.value = column;
+            document.form3.submit();
+            return false;
+        }
+    </script>
+}
 
 @section breadcrumb
 {

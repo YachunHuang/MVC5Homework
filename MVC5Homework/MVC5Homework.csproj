@@ -464,6 +464,12 @@
     <Content Include="Views\客戶資料\客戶資料Partial.cshtml" />
     <Content Include="Views\Home\NewIndex.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶資料.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶銀行資訊.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶聯絡人.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶資料.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶銀行資訊.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶聯絡人.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

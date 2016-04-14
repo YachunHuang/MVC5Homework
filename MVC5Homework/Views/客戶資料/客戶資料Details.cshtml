@@ -7,80 +7,22 @@
 <h2>客戶資料Details</h2>
 @using (Html.BeginForm())
 {
-    <div>
-        <h4>客戶資料</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.帳號)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.帳號)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.密碼)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.密碼)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.客戶名稱)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.客戶名稱)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.統一編號)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.統一編號)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.電話)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.電話)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.傳真)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.傳真)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.地址)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.地址)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-
-        </dl>
-    </div>
-    <div>
-        @{ Html.RenderAction("客戶聯絡人Partial", new { id = Model.Id });}
-    </div>
+    @Html.DisplayFor(model => model)
     <p>
         @Html.ActionLink("Edit", "客戶資料Edit", new { id = Model.Id }) |
         @Html.ActionLink("Back to List", "客戶資料Index") |
-        
+
     </p>
+}
+
+@section breadcrumb
+{
+    <li>
+        <a href="@Url.Action("客戶資料Index","客戶資料")">客戶資料</a>
+        <i class="icon-angle-right"></i>
+    </li>
+    <li>
+        <a href="@Url.Action("客戶資料Details","客戶資料")">Detail</a>
+        <i class="icon-angle-right"></i>
+    </li>
 }
