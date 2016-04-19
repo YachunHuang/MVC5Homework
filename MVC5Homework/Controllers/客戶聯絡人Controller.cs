@@ -18,19 +18,13 @@ namespace MVC5Homework.Controllers
         // GET: 客戶聯絡人
         public ActionResult 客戶聯絡人Index(string keyword, string 職稱, string sortOrder, int page = 1)
         {
-            int currentPage = page < 1 ? 1 : page;
-            if (string.IsNullOrEmpty(sortOrder))
-            {
-                sortOrder = "姓名 desc";
-            }
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "姓名 desc" : sortOrder;
 
             ViewBag.NameSortParm = sortOrder == "姓名" ? "姓名 desc" : "姓名";
             ViewBag.職稱 = new SelectList(contractRepo.GetUserTitle(), "", "");
             ViewBag.客戶名稱 = new SelectList(custRepo.Where(cust => cust.是否刪除 == false), "Id", "客戶名稱");
 
-            var contacts = contractRepo.Where(keyword, 職稱).OrderBy(sortOrder).ToPagedList(currentPage, pageSize);
-
-            return View(contacts);
+            return View(contractRepo.Where(keyword, 職稱).OrderBy(sortOrder).ToPagedList(page, pageSize));
         }
 
         // GET: 客戶聯絡人/Details/5
@@ -47,6 +41,7 @@ namespace MVC5Homework.Controllers
             }
             return View(客戶聯絡人);
         }
+
         [Authorize(Roles = "board_admin")]
         // GET: 客戶聯絡人/Create
         public ActionResult 客戶聯絡人Create()
@@ -54,6 +49,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱");
             return View();
         }
+
         [Authorize(Roles = "board_admin")]
         // POST: 客戶聯絡人/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
@@ -72,7 +68,6 @@ namespace MVC5Homework.Controllers
                 }
                 throw new InvalidOperationException("InvalidOperationException客戶聯絡人Create發生錯誤");
 
-
                 客戶聯絡人.是否刪除 = false;
                 contractRepo.Add(客戶聯絡人);
                 contractRepo.UnitOfWork.Commit();
@@ -82,6 +77,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
+
         [Authorize(Roles = "board_admin")]
         // GET: 客戶聯絡人/Edit/5
         public ActionResult 客戶聯絡人Edit(int? id)
@@ -98,6 +94,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
+
         [Authorize(Roles = "board_admin")]
         // POST: 客戶聯絡人/Edit/5
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
@@ -117,6 +114,7 @@ namespace MVC5Homework.Controllers
             ViewBag.客戶Id = new SelectList(custRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
+
         [Authorize(Roles = "board_admin")]
         // GET: 客戶聯絡人/Delete/5
         public ActionResult 客戶聯絡人Delete(int? id)
@@ -132,6 +130,7 @@ namespace MVC5Homework.Controllers
             }
             return View(客戶聯絡人);
         }
+
         [Authorize(Roles = "board_admin")]
         // POST: 客戶聯絡人/Delete/5
         [HttpPost, ActionName("客戶聯絡人Delete")]

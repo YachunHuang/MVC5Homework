@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using MVC5Homework.Models;
 using System.IO;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Core.Objects;
 using PagedList;
 using System.Linq.Dynamic;
 
@@ -20,13 +16,10 @@ namespace MVC5Homework.Controllers
         // GET: 客戶銀行資訊
         public ActionResult 客戶銀行資訊Index(string keyword, string sortOrder, int page = 1)
         {
-            int currentPage = page < 1 ? 1 : page;
-            if (string.IsNullOrEmpty(sortOrder))
-            {
-                sortOrder = "銀行名稱 desc";
-            }
             ViewBag.NameSortParm = sortOrder == "銀行名稱" ? "銀行名稱 desc" : "銀行名稱";
-            return View(bankRepo.Where(keyword).OrderBy(sortOrder).ToPagedList(currentPage,pageSize));
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "銀行名稱 desc" : sortOrder;
+
+            return View(bankRepo.Where(keyword).OrderBy(sortOrder).ToPagedList(page, pageSize));
         }
 
         // GET: 客戶銀行資訊/Details/5

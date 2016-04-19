@@ -43,11 +43,14 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.客戶分類.分類)
+                <a href="@Url.Action("客戶資料Index", "客戶資料")"
+                   onclick="return MakeSort('分類');">
+                    @Html.DisplayNameFor(model => model.客戶分類.分類)
+                </a>
             </th>
             <th>
                 <a href="@Url.Action("客戶資料Index", "客戶資料")"
-                   onclick="return MakeSort('@ViewBag.NameSortParm');">
+                   onclick="return MakeSort('客戶名稱');">
                     @Html.DisplayNameFor(model => model.客戶名稱)
                 </a>
             </th>
@@ -123,8 +126,14 @@
             })
         })
 
-        function MakeSort(column) {
-            document.form1.sortOrder.value = column;
+        function MakeSort(columnName) {
+
+            if (document.form1.sortOrder.value.indexOf('desc') > 0) {
+                document.form1.sortOrder.value = columnName;
+            }
+            else {
+                document.form1.sortOrder.value = columnName + " desc";
+            }
             document.form1.submit();
             return false;
         }

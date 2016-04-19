@@ -9,9 +9,10 @@
 
 namespace MVC5Homework.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    
+
     public partial class 客戶資料
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -32,11 +33,15 @@ namespace MVC5Homework.Models
         public int 客戶分類Id { get; set; }
         public string 帳號 { get; set; }
         public string 密碼 { get; set; }
-    
+
+        [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<客戶銀行資訊> 客戶銀行資訊 { get; set; }
+
+        [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<客戶聯絡人> 客戶聯絡人 { get; set; }
+
         public virtual 客戶分類 客戶分類 { get; set; }
     }
 }

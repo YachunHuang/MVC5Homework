@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.Linq.Dynamic;
 
 namespace MVC5Homework.Models
 {   
@@ -12,7 +13,7 @@ namespace MVC5Homework.Models
         private string _includeProperties = "客戶分類";
         private IQueryable<客戶資料> _includeResult;
 
-        public virtual IQueryable<客戶資料> All()
+        public virtual new IQueryable<客戶資料> All()
         {
             _all = base.All();
 
@@ -32,6 +33,22 @@ namespace MVC5Homework.Models
              (客.客戶分類Id == custTypeId || custTypeId == 0));
         }
 
+        public IEnumerable<客戶資料> Sort(string keyword, string sortOrder, int? custTypeId)
+        {
+            var customers = Where(keyword, custTypeId).OrderBy(s => s.客戶名稱).ToList();
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "客戶名稱 desc" : sortOrder;
+            if (sortOrder.Contains("分類 desc"))
+                customers = Where(keyword, custTypeId).OrderByDescending(s => s.客戶分類.分類).ToList();
+            else {
+                if (sortOrder.Contains("分類"))
+                    customers = Where(keyword, custTypeId).OrderBy(s => s.客戶分類.分類).ToList();
+                else
+                    customers = Where(keyword, custTypeId).OrderBy(sortOrder).ToList();
+            }
+
+            return customers;
+        }
+
         /// <summary>
         /// 判斷登入帳號
         /// </summary>
@@ -47,7 +64,7 @@ namespace MVC5Homework.Models
             return All().FirstOrDefault(i => i.Id == id);
         }
 
-        public virtual void Delete(客戶資料 entity)
+        public virtual new void Delete(客戶資料 entity)
         {
             entity.是否刪除 = true;
         }

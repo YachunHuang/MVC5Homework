@@ -17,21 +17,15 @@ namespace MVC5Homework.Controllers
     public class 客戶資料Controller : BaseController
     {
         // GET: 客戶資料
-        public ActionResult 客戶資料Index(string keyword, int? 客戶分類Id, string sortOrder, int page = 1)
+        public ActionResult 客戶資料Index(string keyword, string sortOrder, int? 客戶分類Id = 0, int page = 1)
         {
-            if (客戶分類Id == null) { 客戶分類Id = 0; }
-            int currentPage = page < 1 ? 1 : page;
-            if (string.IsNullOrEmpty(sortOrder))
-            {
-                sortOrder = "客戶名稱 desc";
-            }
-            ViewBag.NameSortParm = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
             ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", new { Id = "" });
             ViewBag.分類 = new SelectList(db.客戶分類, "Id", "分類");
 
-            var customers = custRepo.Where(keyword, 客戶分類Id).OrderBy(sortOrder).ToPagedList(currentPage, pageSize);
+            var custom = custRepo.Sort(keyword, sortOrder, 客戶分類Id);
+            page = custom.ToPagedList(page, pageSize).PageCount < page ? 1 : page;
 
-            return View(customers);
+            return View(custom.ToPagedList(page, pageSize));
         }
 
         /// <summary>

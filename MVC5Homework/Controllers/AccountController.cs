@@ -108,20 +108,16 @@ namespace MVC5Homework.Controllers
 
         public ActionResult EditProfile(string account)
         {
-            if (string.IsNullOrEmpty(account))
-            {
-                account = User.Identity.GetUserName();
-            }
-            客戶資料 客戶資料 = db.客戶資料.Include(客=> 客.客戶分類).
+            account = string.IsNullOrEmpty(account) ? User.Identity.GetUserName() : account;
+
+            客戶資料 客戶資料 = db.客戶資料.Include(客 => 客.客戶分類).
                 Where(客 => 客.是否刪除 == false && 客.帳號 == account).FirstOrDefault();
 
-            
             if (客戶資料 == null)
             {
                 return HttpNotFound();
             }
             TempData["PassWord"] = 客戶資料.密碼;
-            //ViewBag.客戶分類Id = new SelectList(db.客戶分類, "Id", "分類", 客戶資料.客戶分類Id);
             return View(客戶資料);
         }
 

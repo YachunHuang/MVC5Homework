@@ -30,13 +30,13 @@
             </div>
             <div style="padding: 15px 50px 5px 50px;float: right;font-size: 16px;">
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "EditProfile", "Account",
-               routeValues: null, htmlAttributes: new { account = User.Identity.GetUserName() }) &nbsp;
+    routeValues: null, htmlAttributes: new { account = User.Identity.GetUserName() }) &nbsp;
                 <a href="@Url.Action("Logout", "Account")" class="btn btn-danger square-btn-adjust">Logout</a>
             </div>
         </nav>
         <!-- /. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
-            <div class="sidebar-collapse">
+            <div id="sildbarDiv" class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
                     <li class="text-center">
                         <img src="~/assets/img/Kiwi.jpg" class="user-image img-responsive" />
@@ -66,7 +66,7 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="icon-home"></i>
-                    <a href="@Url.Action("Index","Home")">Home</a>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="icon-angle-right"></i>
                 </li>
                 @RenderSection("breadcrumb", false)
@@ -99,3 +99,20 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+@{
+    <script>
+        $(function () {
+            $('#sildbarDiv a').on('click', function () {
+
+                $('#sildbarDiv a').removeClass('active-menu');
+
+                //setTimeout(function () {
+                    $(this).addClass('active-menu');
+                //}, 1000);
+                    //$(this).closest('ul').find('li').removeClass('active-menu');
+                    //$(this).closest('li').addClass('active-menu');
+                //return false;
+            });
+        });
+    </script>
+}
